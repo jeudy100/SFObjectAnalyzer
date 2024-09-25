@@ -1,0 +1,32 @@
+{
+  "name": "sfobjectanalyzer",
+  "version": "1.0.0",
+  "description": "Analyze SF objects' fields utilization",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node index.js",
+    "download-object-records": "node src/downloadObjectRecords.js",
+    "generate-reports": "node src/generateObjectReports.js",
+    "generate-spreadsheet": "node src/generateSpreadsheet.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeudy100/SFObjectAnalyzer.git"
+  },
+  "author": "Jordan Eudy (jeudy100@gmail.com)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jeudy100/SFObjectAnalyzer/issues"
+  },
+  "homepage": "https://github.com/jeudy100/SFObjectAnalyzer#readme",
+  "dependencies": {
+    "csv-parse": "^5.5.6",
+    "csv-writer": "^1.6.0",
+    "exceljs": "^4.4.0",
+    "fs": "^0.0.1-security",
+    "jsforce": "^3.4.2",
+    "path": "^0.12.7",
+    "yargs": "^17.7.2"
+  }
+}
