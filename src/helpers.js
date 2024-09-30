@@ -7,7 +7,7 @@ import { dirname } from 'path';
 // Get the __filename and __dirname for this module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const config = JSON.parse(await fs.promises.readFile('./config.json', 'utf-8'));
+export const config = JSON.parse(await fs.promises.readFile(path.join(__dirname, '..', 'config.json'), 'utf-8'));
 
 /**
  * Logs in to Salesforce using the provided username and password.

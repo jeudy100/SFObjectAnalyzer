@@ -1,6 +1,6 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
-import { resetRecordsDir, fetchFields, fetchObjectRecords, login } from './helpers.js';
+import { config, fetchFields, fetchObjectRecords, login } from './helpers.js';
 
 // Parse command-line arguments
 const argv = yargs(hideBin(process.argv))
@@ -48,27 +48,30 @@ const objectsToAnalyze = objects.split(',');
 async function main() {
     // Step 1: Log in to Salesforce
     const conn = await login(username, password + s, url);
+    conn.bulk.pollTimeout = config.pollTimeout;
+    conn.bulk.pollInterval = config.pollInterval;
 
     if (!conn)
       return;
 
-    try {
       for (const objectName of objectsToAnalyze) {
           console.log(`Dumping data for ${objectName}...`);
 
-          // Step 1: Fetch fields for the object
-          const fields = await fetchFields(conn, objectName);
+          try {
+            // Step 1: Fetch fields for the object
+            const fields = await fetchFields(conn, objectName);
 
-          // if not fields were returned skip to the next object.
-          if (fields === undefined || fields === null || fields?.length === 0) 
+            // if not fields were returned skip to the next object.
+            if (fields === undefined || fields === null || fields?.length === 0) 
               continue;
 
-          // Step 2: Fetch all object records and stream them into their respective csv files.
-          await fetchObjectRecords(objectName, conn, fields.map(f => f.name));
+            // Step 2: Fetch all object records and stream them into their respective csv files.
+            await fetchObjectRecords(objectName, conn, fields.map(f => f.name));
+          } catch (err) {
+            console.error(err);
+          }
       }
-    } catch (err) {
-      console.error(err);
-    }
+    
 
     console.log('Data dump complete.');
 }
