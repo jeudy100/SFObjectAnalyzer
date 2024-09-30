@@ -52,6 +52,14 @@ export function GetSpreadsheetPath() {
 }
 
 /**
+ * Returns the absolute path to the field descriptions file where the root is the project directory.
+ * @returns {string} - The absolute path to the field descriptions file.
+ */
+export function GetFieldDescriptionPath() {
+    return path.join(__dirname, '..', config.fieldDescriptionsPath);
+}
+
+/**
  * Resets the records directory by deleting and creating it again.
  */
 export function resetRecordsDir() {

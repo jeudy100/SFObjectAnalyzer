@@ -50,7 +50,7 @@ async function generateCsvReports() {
                 }));
 
                 if (!fs.existsSync(reportsPath))
-                    fs.mkdirSync(reportsPath)
+                    fs.mkdirSync(reportsPath, { recursive: true })
                 
                 // Define CSV writer
                 const csvWriter = createObjectCsvWriter({

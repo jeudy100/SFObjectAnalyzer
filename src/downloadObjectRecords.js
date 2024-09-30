@@ -1,5 +1,6 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
+import fs from 'fs';
 import { config, fetchFields, fetchObjectRecords, login } from './helpers.js';
 
 // Parse command-line arguments
@@ -54,24 +55,31 @@ async function main() {
     if (!conn)
       return;
 
-      for (const objectName of objectsToAnalyze) {
-          console.log(`Dumping data for ${objectName}...`);
+    if (!fs.existsSync(config.fieldDescriptionsPath))
+      fs.mkdirSync(config.fieldDescriptionsPath, { recursive: true })
 
-          try {
-            // Step 1: Fetch fields for the object
-            const fields = await fetchFields(conn, objectName);
+    for (const objectName of objectsToAnalyze) {
+        console.log(`Dumping data for ${objectName}...`);
 
-            // if not fields were returned skip to the next object.
-            if (fields === undefined || fields === null || fields?.length === 0) 
-              continue;
+        try {
+          // Step 1: Fetch fields for the object
+          const fields = await fetchFields(conn, objectName);
+          const fieldDescriptions = {};
 
-            // Step 2: Fetch all object records and stream them into their respective csv files.
-            await fetchObjectRecords(objectName, conn, fields.map(f => f.name));
-          } catch (err) {
-            console.error(err);
-          }
-      }
-    
+          
+          fields.forEach(f => fieldDescriptions[f.name] = f.inlineHelpText);
+          fs.writeFileSync(`${config.fieldDescriptionsPath}/${objectName}.json`, JSON.stringify(fieldDescriptions));
+
+          // if not fields were returned skip to the next object.
+          if (fields === undefined || fields === null || fields?.length === 0) 
+            continue;
+
+          // Step 2: Fetch all object records and stream them into their respective csv files.
+          await fetchObjectRecords(objectName, conn, fields.map(f => f.name));
+        } catch (err) {
+          console.error(err);
+        }
+    }
 
     console.log('Data dump complete.');
 }

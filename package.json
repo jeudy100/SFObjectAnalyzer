@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "generate-reports": "node src/generateObjectReports.js",
-    "generate-spreadsheets": "npm run generate-reports && node src/generateSpreadsheet.js"
+    "generate-spreadsheet": "node src/generateSpreadsheet.js",
+    "generate-rpeports-spreadsheet": "npm run generate-reports && npm run generate-spreadsheet"
   },
   "repository": {
     "type": "git",
