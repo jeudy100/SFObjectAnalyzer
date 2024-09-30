@@ -1,5 +1,5 @@
 {
-    "recordsDataPath": "dist/records",
+    "recordsPath": "dist/records",
     "reportsPath": "dist/reports",
     "spreadsheetPath": "dist/spreadsheet"
 }

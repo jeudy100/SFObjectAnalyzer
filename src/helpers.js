@@ -32,7 +32,7 @@ export async function login(username, password, loginUrl) {
  * @returns {string} - The absolute path to the records directory.
  */
 export function GetRecordsPath() {
-    return path.join(__dirname, '..', config.recordsDataPath);
+    return path.join(__dirname, '..', config.recordsPath);
 }
 
 /**
@@ -40,7 +40,7 @@ export function GetRecordsPath() {
  * @returns {string} - The absolute path to the reports directory.
  */
 export function GetReportsPath() {
-    return path.join(__dirname, '..', config.reportsDataPath);
+    return path.join(__dirname, '..', config.reportsPath);
 }
 
 /**

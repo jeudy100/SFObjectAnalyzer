@@ -1,14 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { createObjectCsvWriter } from 'csv-writer';
-import { GetRecordsPath, GetReportsPath, resetReportsDir } from './helpers.js';
+import { GetRecordsPath, GetReportsPath } from './helpers.js';
 import csv from 'csv-parser';
 
 /**
  * Generate CSV reports for each file in the records directory
  */
 async function generateCsvReports() {
-    resetReportsDir();
     const recordsDir = GetRecordsPath(); // Adjust this path if necessary
     const files = fs.readdirSync(recordsDir);
 
@@ -41,6 +40,8 @@ async function generateCsvReports() {
 
             // On end generate the CSV report
             readStream.on('end', async () => {
+                const reportsPath = GetReportsPath();
+                const filePath = path.join(reportsPath, fileName);
                 // Prepare data for CSV
                 const csvData = Object.entries(fieldCounts).map(([field, counts]) => ({
                     field,
@@ -48,9 +49,12 @@ async function generateCsvReports() {
                     populated: counts.populated,
                 }));
 
+                if (!fs.existsSync(reportsPath))
+                    fs.mkdirSync(reportsPath)
+                
                 // Define CSV writer
                 const csvWriter = createObjectCsvWriter({
-                    path: path.join(GetReportsPath(), fileName),
+                    path: filePath,
                     header: [
                         { id: 'field', title: 'Field' },
                         { id: 'total', title: 'Total Records' },

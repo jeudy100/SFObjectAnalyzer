@@ -1,14 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 import ExcelJS from 'exceljs';
-import { GetReportsPath, GetSpreadsheetPath, resetSpreadsheetDir } from './helpers.js';
+import { GetReportsPath, GetSpreadsheetPath } from './helpers.js';
 
 /**
  * Generate an Excel spreadsheet from the CSV reports
  */
 async function generateSpreadsheet() {
-    resetSpreadsheetDir();
     const reportsDir = GetReportsPath(); // Path to the reports directory
+    const spreadsheetPath = GetSpreadsheetPath();
+
+    if (!fs.existsSync(spreadsheetPath))
+        fs.mkdirSync(spreadsheetPath);
+
     const files = fs.readdirSync(reportsDir);
 
     if (files.length === 0) {
@@ -29,7 +33,12 @@ async function generateSpreadsheet() {
         const worksheet = workbook.addWorksheet(objectName);
 
         // Add headers
-        worksheet.addRow(['Field', 'Total Records', 'Populated Records', 'Utilization Percentage', 'Description']);
+        const xlrows = ['Field', 'Total Records', 'Populated Records', 'Utilization Percentage', 'Description'];
+        worksheet.addRow(xlrows);
+
+        // Set the width for Field and Description columns to be 50 and the other fields to be 35.
+        for (const i = 1; i <= xlrows; i++)
+            worksheet.getColumn(i).width = i === 1 || i === 5 ? 50 : 35;
 
         // Process each row of CSV data
         for (let i = 1; i < rows.length; i++) { // Skip header
@@ -45,9 +54,9 @@ async function generateSpreadsheet() {
     }
 
     // Save the workbook to a file
-    const spreadsheetPath = path.join(GetSpreadsheetPath(), 'Salesforce_Report.xlsx');
-    await workbook.xlsx.writeFile(spreadsheetPath);
-    console.log(`Spreadsheet generated: ${spreadsheetPath}`);
+    const spreadsheetFilePath = path.join(GetSpreadsheetPath(), 'Salesforce_Report.xlsx');
+    await workbook.xlsx.writeFile(spreadsheetFilePath);
+    console.log(`Spreadsheet generated: ${spreadsheetFilePath}`);
 }
 
 // Run the spreadsheet generation process

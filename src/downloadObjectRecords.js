@@ -39,18 +39,14 @@ const argv = yargs(hideBin(process.argv))
   .parse();
 
 // Extract command-line arguments
-console.log(argv);
 const { username, password, objects, url, s } = argv;
-console.log(username, password, objects, url);
 const objectsToAnalyze = objects.split(',');
 
 /**
  * Downloads Salesforce object records and writes them to JSON files.
  */
 async function main() {
-    resetRecordsDir();
     // Step 1: Log in to Salesforce
-    console.log(password + s)
     const conn = await login(username, password + s, url);
 
     if (!conn)
@@ -58,7 +54,7 @@ async function main() {
 
     try {
       for (const objectName of objectsToAnalyze) {
-          console.log('Dumping data for ${objectName}...');
+          console.log(`Dumping data for ${objectName}...`);
 
           // Step 1: Fetch fields for the object
           const fields = await fetchFields(conn, objectName);
