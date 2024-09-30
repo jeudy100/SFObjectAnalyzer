@@ -4,8 +4,6 @@
   "description": "Analyze SF objects' fields utilization",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node index.js",
     "generate-reports": "node src/generateObjectReports.js",
     "generate-spreadsheets": "npm run generate-reports && node src/generateSpreadsheet.js"
   },
